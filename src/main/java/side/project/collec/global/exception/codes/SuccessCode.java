@@ -1,0 +1,51 @@
+package side.project.collec.global.exception.codes;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import org.springframework.http.HttpStatus;
+
+@AllArgsConstructor
+@Getter
+public enum SuccessCode {
+
+    /**
+     * 200 OK
+     */
+    OK(HttpStatus.OK, "요청이 성공했습니다."),
+
+    /**
+     * 201 CREATED SUCCESS
+     */
+    CREATED(HttpStatus.CREATED, "생성 요청이 성공했습니다."),
+    USER_CREATED(HttpStatus.CREATED, "유저 회원가입이 성공했습니다."),
+    TEAM_CREATED(HttpStatus.CREATED, "팀 등록에 성공했습니다."),
+
+    /**
+     * 202 ACCEPTED
+     */
+    ACCEPTED(HttpStatus.ACCEPTED, "요청이 성공적으로 처리되었습니다. 결과는 나중에 확인할 수 있습니다."),
+
+    /**
+     * 204 NO CONTENT
+     */
+    NO_CONTENT(HttpStatus.NO_CONTENT, "요청이 성공적으로 처리되었으나 반환할 데이터가 없습니다."),
+
+    /**
+     * 200 OK (Additional Success Responses)
+     */
+    SCREENSHOT_PROCESSED(HttpStatus.OK, "스크린샷이 성공적으로 처리되었습니다."),
+    NOTIFICATION_SENT(HttpStatus.OK, "알림이 성공적으로 전송되었습니다."),
+
+    /**
+     * 204 NO CONTENT (Deletion Responses)
+     */
+    USER_DELETED(HttpStatus.NO_CONTENT, "유저가 성공적으로 삭제되었습니다."),
+    TEAM_DELETED(HttpStatus.NO_CONTENT, "팀이 성공적으로 삭제되었습니다.");
+
+    private final HttpStatus status;
+    private final String message;
+
+    public int getStatusCode() {
+        return status.value();
+    }
+}
