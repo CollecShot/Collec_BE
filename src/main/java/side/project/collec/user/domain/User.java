@@ -1,4 +1,4 @@
-package side.project.collec.user;
+package side.project.collec.user.domain;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -20,9 +20,9 @@ public class User {
     @Column(name = "id", updatable = false)
     private Long id;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Album> albums;
+
     @Column(name = "device_uid", nullable = false, unique = true)
     private String deviceUID;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Album> album;
 }
