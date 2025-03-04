@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import side.project.collec.photo.Photo;
+import side.project.collec.photo.domain.Photo;
 
 @Entity
 @Table(name = "category")
@@ -17,7 +17,7 @@ public class Tag {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "category_name", nullable = false)
+    @Column(name = "tag_name", nullable = false)
     private String tagName;
 
     @ManyToOne

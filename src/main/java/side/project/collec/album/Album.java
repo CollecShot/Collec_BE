@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import side.project.collec.category.Category;
-import side.project.collec.user.User;
+import side.project.collec.user.domain.User;
 
 import java.util.List;
 
@@ -25,7 +25,7 @@ public class Album {
     private String albumName;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)  // user_id를 외래 키로 사용
+    @JoinColumn(name = "device_uid", nullable = false)
     private User user;
 
     @OneToMany(mappedBy = "album", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
