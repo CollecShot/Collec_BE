@@ -12,12 +12,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import side.project.collec.album.Album;
 import side.project.collec.album.AlbumRepository;
-import side.project.collec.global.exception.AlbumNotFoundException;
+import side.project.collec.global.exception.customException.AlbumNotFoundException;
 import side.project.collec.photo.domain.Photo;
 import side.project.collec.photo.domain.dto.req.PhotoRequestDto;
 import side.project.collec.photo.repository.PhotoRepository;
 import side.project.collec.global.exception.codes.ErrorCode;
-import side.project.collec.global.exception.CustomException;
 
 import java.io.IOException;
 import java.io.InputStream;

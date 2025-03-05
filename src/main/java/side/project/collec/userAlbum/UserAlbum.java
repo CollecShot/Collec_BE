@@ -9,6 +9,7 @@ import side.project.collec.album.Album;
 import side.project.collec.user.domain.User;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -22,14 +23,16 @@ public class UserAlbum {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "device_uid", referencedColumnName = "deviceUID", nullable = false)
+    // user_id 대신 device_uid를 외래 키로 사용
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "device_uid", nullable = false)  // 외래 키를 device_uid로 수정
     private User user;
 
-    @OneToMany(mappedBy = "userAlbum", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Album> albums;
+    @OneToMany(mappedBy = "userAlbum", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<Album> albums = new ArrayList<>();
 
-    @Column(nullable = false, updatable = false)
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @PrePersist
@@ -37,10 +40,26 @@ public class UserAlbum {
         this.createdAt = LocalDateTime.now();
     }
 
-    public static UserAlbum createDefaultAlbum(User user) {
-        return UserAlbum.builder()
+    // 기본 앨범이 포함된 UserAlbum 객체를 생성하는 정적 메서드
+    public static UserAlbum createWithDefaultAlbums(User user) {
+        UserAlbum userAlbum = UserAlbum.builder()
                 .user(user)
                 .build();
+        userAlbum.addDefaultAlbums();
+        return userAlbum;
+    }
+
+    // 기본 앨범을 UserAlbum에 추가하는 메서드
+    private void addDefaultAlbums() {
+        String[] defaultAlbumNames = {"기본 앨범", "동물", "음악", "채팅", "문서", "사진", "여행", "이벤트", "일상"};
+
+        for (String name : defaultAlbumNames) {
+            Album album = Album.builder()
+                    .albumName(name)
+                    .user(this.user)  // User와 연결
+                    .userAlbum(this)  // UserAlbum과 연결
+                    .build();
+            this.albums.add(album);
+        }
     }
 }
-
