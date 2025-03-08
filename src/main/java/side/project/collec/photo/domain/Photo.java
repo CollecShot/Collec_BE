@@ -6,10 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import side.project.collec.album.Album;
-import side.project.collec.tag.Tag;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table(name = "photo")
@@ -36,15 +34,15 @@ public class Photo {
     @JoinColumn(name = "album_id", nullable = false)
     private Album album;
 
-    @OneToMany(mappedBy = "photo", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Tag> Tags;
+    @Column(name = "tags", nullable = true)
+    private String tags;
 
     @Builder
-    public Photo(String photoFilepath, LocalDateTime photoDatetime, String photoUrl, Album album) {
+    public Photo(String photoFilepath, LocalDateTime photoDatetime, String photoUrl, String tags, Album album) {
         this.photoFilepath = photoFilepath;
         this.photoDatetime = photoDatetime;
         this.photoUrl = photoUrl;
+        this.tags = tags;
         this.album = album;
     }
-
 }
