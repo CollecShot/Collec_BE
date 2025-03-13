@@ -104,6 +104,7 @@ public class PhotoService {
 
         // 찾은 Photo의 photoFilepath 반환
         return PhotoResponseDto.builder()
+                .id(photo.getId())
                 .photoFilepath(photo.getPhotoFilepath())
                 .build();
     }
@@ -113,6 +114,7 @@ public class PhotoService {
         List<Photo> photos = photoRepository.findByAlbumId(albumId);
         return photos.stream()
                 .map(photo -> PhotoResponseDto.builder()
+                        .id(photo.getId())
                         .photoFilepath(photo.getPhotoFilepath())
                         .build()
                 )

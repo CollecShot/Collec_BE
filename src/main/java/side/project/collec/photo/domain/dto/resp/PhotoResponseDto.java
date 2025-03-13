@@ -13,11 +13,13 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class PhotoResponseDto {
+    private Long id;
     private String photoFilepath;
 
 
     public static PhotoResponseDto fromEntity(Photo photo) {
         return PhotoResponseDto.builder()
+                .id(photo.getId())
                 .photoFilepath(photo.getPhotoFilepath())
                 .build();
     }
