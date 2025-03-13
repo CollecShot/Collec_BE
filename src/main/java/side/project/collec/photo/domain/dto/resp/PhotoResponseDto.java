@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import side.project.collec.photo.domain.Photo;
 
 import java.time.LocalDateTime;
 
@@ -13,4 +14,11 @@ import java.time.LocalDateTime;
 @Builder
 public class PhotoResponseDto {
     private String photoFilepath;
+
+
+    public static PhotoResponseDto fromEntity(Photo photo) {
+        return PhotoResponseDto.builder()
+                .photoFilepath(photo.getPhotoFilepath())
+                .build();
+    }
 }

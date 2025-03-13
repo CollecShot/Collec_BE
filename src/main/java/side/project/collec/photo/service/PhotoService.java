@@ -24,7 +24,9 @@ import side.project.collec.global.exception.codes.ErrorCode;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -104,5 +106,16 @@ public class PhotoService {
         return PhotoResponseDto.builder()
                 .photoFilepath(photo.getPhotoFilepath())
                 .build();
+    }
+
+    //앨범별 상세 조회
+    public List<PhotoResponseDto> getPhotosByAlbumId(Long albumId) {
+        List<Photo> photos = photoRepository.findByAlbumId(albumId);
+        return photos.stream()
+                .map(photo -> PhotoResponseDto.builder()
+                        .photoFilepath(photo.getPhotoFilepath())
+                        .build()
+                )
+                .collect(Collectors.toList());
     }
 }
