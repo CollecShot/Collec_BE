@@ -49,6 +49,7 @@ target/
 # 환경설정 파일 무시 (중요)
 src/main/resources/application*.properties
 src/main/resources/application*.yml
+src/main/resources/collec-gcp-key.json
 
 # 로그 파일 무시
 /logs/
