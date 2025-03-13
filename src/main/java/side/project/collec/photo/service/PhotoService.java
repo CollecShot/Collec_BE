@@ -14,8 +14,11 @@ import org.springframework.web.client.RestTemplate;
 import side.project.collec.album.Album;
 import side.project.collec.album.AlbumRepository;
 import side.project.collec.global.exception.customException.AlbumNotFoundException;
+import side.project.collec.global.exception.customException.PhotoNotFoundException;
+
 import side.project.collec.photo.domain.Photo;
 import side.project.collec.photo.domain.dto.req.PhotoRequestDto;
+import side.project.collec.photo.domain.dto.resp.PhotoResponseDto;
 import side.project.collec.photo.repository.PhotoRepository;
 import side.project.collec.global.exception.codes.ErrorCode;
 
@@ -29,13 +32,13 @@ public class PhotoService {
 
     private final PhotoRepository photoRepository;
     private final AlbumRepository albumRepository;
-    private final RestTemplate restTemplate;
+    // private final RestTemplate restTemplate;
 
     @Value("${google.cloud.bucket-name}")
     private String BUCKET_NAME;
 
-    @Value("${ai.server.url}")
-    private String aiServerUrl;
+//    @Value("${ai.server.url}")
+//    private String aiServerUrl;
 
     public void savePhoto(PhotoRequestDto requestDto, MultipartFile image) throws IOException {
         Album album = albumRepository.findById(requestDto.getAlbumId())
@@ -44,22 +47,22 @@ public class PhotoService {
         String photoUrl = uploadPhoto(image);
 
         // AI 서버로 photoUrl 전송해 카테고리 받기
-        String tags = getCategoryFromAI(photoUrl);
+        //String tags = getCategoryFromAI(photoUrl);
 
         Photo photo = Photo.builder()
                 .photoFilepath(requestDto.getPhotoFilepath())
                 .photoDatetime(requestDto.getPhotoDatetime())
                 .photoUrl(photoUrl)
-                .tags(tags)
+                // .tags(tags)
                 .album(album)
                 .build();
 
         photoRepository.save(photo);
     }
 
-    private String getCategoryFromAI(String photoUrl) {
-        return restTemplate.postForObject(aiServerUrl, photoUrl, String.class);
-    }
+//    private String getCategoryFromAI(String photoUrl) {
+//        return restTemplate.postForObject(aiServerUrl, photoUrl, String.class);
+//    }
 
     public String uploadPhoto(MultipartFile image) throws IOException {
         GoogleCredentials credentials = loadGoogleCredentials();
@@ -88,5 +91,18 @@ public class PhotoService {
         String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
         String uniqueId = UUID.randomUUID().toString();
         return uniqueId + extension;
+    }
+
+
+    //사진 상세 조회
+    public PhotoResponseDto photoDetail(Long id) {
+        // fileName을 기반으로 정확한 Photo 엔티티 찾기
+        Photo photo = photoRepository.findById(id)
+                .orElseThrow(PhotoNotFoundException::new);
+
+        // 찾은 Photo의 photoFilepath 반환
+        return PhotoResponseDto.builder()
+                .photoFilepath(photo.getPhotoFilepath())
+                .build();
     }
 }
