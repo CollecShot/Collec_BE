@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.client.RestTemplate;
 import side.project.collec.album.Album;
 import side.project.collec.album.AlbumRepository;
+import side.project.collec.album.AlbumResponseDto;
 import side.project.collec.global.exception.customException.AlbumNotFoundException;
 import side.project.collec.global.exception.customException.PhotoNotFoundException;
 
@@ -21,6 +22,7 @@ import side.project.collec.photo.domain.dto.req.PhotoRequestDto;
 import side.project.collec.photo.domain.dto.resp.PhotoResponseDto;
 import side.project.collec.photo.repository.PhotoRepository;
 import side.project.collec.global.exception.codes.ErrorCode;
+import side.project.collec.userAlbum.UserAlbumRepository;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,6 +36,7 @@ public class PhotoService {
 
     private final PhotoRepository photoRepository;
     private final AlbumRepository albumRepository;
+    private final UserAlbumRepository userAlbumRepository;
     // private final RestTemplate restTemplate;
 
     @Value("${google.cloud.bucket-name}")
