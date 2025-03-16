@@ -4,10 +4,11 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import side.project.collec.album.Album;
 import side.project.collec.photo.domain.Photo;
 
 @Entity
-@Table(name = "category")
+@Table(name = "Tag")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -23,5 +24,10 @@ public class Tag {
     @ManyToOne
     @JoinColumn(name = "photo_id", nullable = false)
     private Photo photo;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "album_id", nullable = false)
+    private Album album;
+
 
 }
