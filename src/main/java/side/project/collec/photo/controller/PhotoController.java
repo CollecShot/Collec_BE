@@ -8,9 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import side.project.collec.global.exception.customException.AlbumNotFoundException;
 import side.project.collec.global.exception.customException.PhotoNotFoundException;
-import side.project.collec.photo.domain.Photo;
 import side.project.collec.photo.domain.dto.req.PhotoRequestDto;
-import side.project.collec.photo.domain.dto.resp.PhotoResponseDto;
+import side.project.collec.photo.domain.dto.res.PhotoResponseDto;
 import side.project.collec.photo.service.PhotoService;
 import side.project.collec.global.exception.codes.SuccessCode;
 
