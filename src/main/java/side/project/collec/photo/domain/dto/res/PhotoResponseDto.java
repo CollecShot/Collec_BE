@@ -1,12 +1,10 @@
-package side.project.collec.photo.domain.dto.resp;
+package side.project.collec.photo.domain.dto.res;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import side.project.collec.photo.domain.Photo;
-
-import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor

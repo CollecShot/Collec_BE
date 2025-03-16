@@ -30,7 +30,7 @@ public class Photo {
     @Column(name = "photo_url", nullable = false)
     private String photoUrl;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "album_id", nullable = false)
     private Album album;
 
