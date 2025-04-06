@@ -34,15 +34,11 @@ public class Photo {
     @JoinColumn(name = "album_id", nullable = false)
     private Album album;
 
-    @Column(name = "tags", nullable = true)
-    private String tags;
-
     @Builder
-    public Photo(String photoFilepath, LocalDateTime photoDatetime, String photoUrl, String tags, Album album) {
+    public Photo(String photoFilepath, LocalDateTime photoDatetime, String photoUrl, Album album) {
         this.photoFilepath = photoFilepath;
         this.photoDatetime = photoDatetime;
         this.photoUrl = photoUrl;
-        this.tags = tags;
         this.album = album;
     }
 }
