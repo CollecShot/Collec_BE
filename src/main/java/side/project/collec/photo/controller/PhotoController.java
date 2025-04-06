@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import side.project.collec.global.exception.customException.AlbumNotFoundException;
+import side.project.collec.global.exception.customException.AlbumPhotoNotFoundException;
 import side.project.collec.global.exception.customException.PhotoNotFoundException;
 import side.project.collec.photo.domain.dto.req.PhotoRequestDto;
 import side.project.collec.photo.domain.dto.res.PhotoResponseDto;
@@ -49,7 +50,7 @@ public class PhotoController {
 
     // 특정 앨범의 모든 사진 조회 (리스트 반환)
     @GetMapping("/albums")
-    @ExceptionHandler(value = {AlbumNotFoundException.class})
+    @ExceptionHandler(value = {AlbumPhotoNotFoundException.class})
     @ApiResponses(value = {
             @ApiResponse(responseCode = "400", description = "Bad Request!"),
             @ApiResponse(responseCode = "403", description = "Forbidden! Already Exist"),
