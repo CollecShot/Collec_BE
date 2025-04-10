@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import side.project.collec.user.domain.User;
+import side.project.collec.user.domain.dto.UserRequestDto;
 import side.project.collec.user.service.UserService;
 
 @RestController
@@ -15,12 +16,15 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("register")
-    public ResponseEntity<?> createUser(@RequestBody User user) {
+    public ResponseEntity<?> createUser(@RequestBody UserRequestDto requestDto) {
         try {
-            User createdUser = userService.createUserWithDefaultAlbums(user);
-            return new ResponseEntity<>(createdUser.getUserAlbums(), HttpStatus.CREATED);
+            User createdUser = userService.createUserWithDefaultAlbums(requestDto);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdUser.getUserAlbums());
         } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 }
+
+
+
