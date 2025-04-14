@@ -1,4 +1,4 @@
-package side.project.collec.album;
+package side.project.collec.album.domain;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
