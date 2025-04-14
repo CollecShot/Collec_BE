@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import side.project.collec.album.Album;
+import side.project.collec.album.domain.Album;
 import side.project.collec.user.domain.User;
 
 import java.time.LocalDateTime;
@@ -51,7 +51,7 @@ public class UserAlbum {
 
     // 기본 앨범을 UserAlbum에 추가하는 메서드
     private void addDefaultAlbums() {
-        String[] defaultAlbumNames = {"기본 앨범", "동물", "음악", "채팅", "문서", "사진", "여행", "이벤트", "일상"};
+        String[] defaultAlbumNames = {"기타", "쇼핑", "문서", "예약", "장소", "쿠폰", "대화기록", "노래", "동물", "인물"};
 
         for (String name : defaultAlbumNames) {
             Album album = Album.builder()

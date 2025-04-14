@@ -1,7 +1,9 @@
-package side.project.collec.album;
+package side.project.collec.album.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import side.project.collec.album.AlbumRepository;
+import side.project.collec.album.domain.Album;
 import side.project.collec.global.exception.codes.ErrorCode;
 import side.project.collec.global.exception.customException.AlbumNotFoundException;
 

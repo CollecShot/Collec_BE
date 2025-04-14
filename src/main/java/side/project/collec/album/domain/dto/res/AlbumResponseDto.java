@@ -1,9 +1,10 @@
-package side.project.collec.album;
+package side.project.collec.album.domain.dto.res;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import side.project.collec.album.domain.Album;
 import side.project.collec.photo.domain.Photo;
 
 @Data
