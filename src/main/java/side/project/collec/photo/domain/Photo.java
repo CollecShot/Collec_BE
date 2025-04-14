@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import side.project.collec.album.Album;
+import side.project.collec.album.domain.Album;
 
 import java.time.LocalDateTime;
 
@@ -30,15 +30,23 @@ public class Photo {
     @Column(name = "photo_url", nullable = false)
     private String photoUrl;
 
+    @Column(length = 200)
+    private String tags;
+
+    @Column(name = "category")
+    private String category;
+
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "album_id", nullable = false)
     private Album album;
 
     @Builder
-    public Photo(String photoFilepath, LocalDateTime photoDatetime, String photoUrl, Album album) {
+    public Photo(String photoFilepath, LocalDateTime photoDatetime, String photoUrl, String category, Album album) {
         this.photoFilepath = photoFilepath;
         this.photoDatetime = photoDatetime;
         this.photoUrl = photoUrl;
+        this.category = category;
         this.album = album;
     }
 }
