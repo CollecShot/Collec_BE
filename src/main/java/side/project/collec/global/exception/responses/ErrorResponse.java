@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.http.ResponseEntity;
 import side.project.collec.global.exception.codes.ErrorCode;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -22,5 +23,10 @@ public class ErrorResponse {
                 .status(errorCode.getStatus().value())
                 .message(errorCode.getMessage())
                 .build();
+    }
+
+    public static ResponseEntity<ErrorResponse> to(ErrorCode errorCode) {
+        return ResponseEntity.status(errorCode.getStatus().value())
+                .body(ErrorResponse.of(errorCode));
     }
 }
