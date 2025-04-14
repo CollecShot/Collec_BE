@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import side.project.collec.album.AlbumResponseDto;
+import side.project.collec.album.domain.dto.res.AlbumResponseDto;
 import side.project.collec.global.exception.customException.AlbumNotFoundException;
 import side.project.collec.photo.domain.Photo;
 import side.project.collec.photo.repository.PhotoRepository;
