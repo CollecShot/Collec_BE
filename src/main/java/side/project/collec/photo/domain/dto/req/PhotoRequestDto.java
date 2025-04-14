@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PhotoRequestDto {
+    private String deviceUID;
     private Long albumId;
     private String photoFilepath;
     private LocalDateTime photoDatetime;
