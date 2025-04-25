@@ -34,6 +34,7 @@ public enum ErrorCode {
     // 관련된 데이터가 없는 경우
     SCREENSHOT_NOT_FOUND(404, HttpStatus.NOT_FOUND, "요청한 스크린샷을 찾을 수 없습니다."),
     ALBUM_NOT_FOUND(404, HttpStatus.NOT_FOUND, "요청한 앨범을 찾을 수 없습니다."),
+    USER_ALBUM_NOT_FOUND(404, HttpStatus.NOT_FOUND, "요청한 사용자 앨범을 찾을 수 없습니다."),
     PHOTO_NOT_FOUND(404, HttpStatus.NOT_FOUND, "요청한 사진을 찾을 수 없습니다."),
 
     /**

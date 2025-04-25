@@ -6,16 +6,25 @@ import side.project.collec.album.AlbumRepository;
 import side.project.collec.album.domain.Album;
 import side.project.collec.global.exception.codes.ErrorCode;
 import side.project.collec.global.exception.customException.AlbumNotFoundException;
+import side.project.collec.userAlbum.UserAlbum;
+import side.project.collec.userAlbum.UserAlbumRepository;
 
 @Service
 @RequiredArgsConstructor
 public class AlbumService {
 
-    private final AlbumRepository albumRepository;
+    private final UserAlbumRepository userAlbumRepository;
 
-    // deviceUID에 해당하는 앨범을 반환 (해당 앨범이 없으면 예외 발생)
-    public Album getDefaultAlbumForUser(String deviceUID) {
-        return albumRepository.findFirstAlbumByDeviceUID(deviceUID)
+    // UserAlbum과 default Album을 함께 처리
+    public UserAlbum getUserAlbumWithDefaultAlbum (String deviceUID){
+        UserAlbum userAlbum = userAlbumRepository.findByUser_DeviceUID(deviceUID)
                 .orElseThrow(() -> new AlbumNotFoundException(ErrorCode.ALBUM_NOT_FOUND));
+
+        if (userAlbum.getAlbums().isEmpty()) {
+            throw new AlbumNotFoundException(ErrorCode.USER_ALBUM_NOT_FOUND);
+        }
+
+        return userAlbum;
     }
+
 }

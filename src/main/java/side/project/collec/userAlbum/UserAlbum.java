@@ -56,8 +56,7 @@ public class UserAlbum {
         for (String name : defaultAlbumNames) {
             Album album = Album.builder()
                     .albumName(name)
-                    .user(this.user)  // User와 연결
-                    .userAlbum(this)  // UserAlbum과 연결
+                    .userAlbum(this)
                     .build();
             this.albums.add(album);
         }

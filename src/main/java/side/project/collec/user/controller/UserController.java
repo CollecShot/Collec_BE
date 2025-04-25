@@ -13,6 +13,7 @@ import side.project.collec.global.exception.responses.SuccessResponse;
 import side.project.collec.user.domain.User;
 import side.project.collec.user.domain.dto.UserRequestDto;
 import side.project.collec.user.service.UserService;
+import side.project.collec.userAlbum.UserAlbum;
 
 @RestController
 @RequestMapping("/users")
@@ -27,10 +28,10 @@ public class UserController {
         try {
             User createdUser = userService.createUserWithDefaultAlbums(requestDto);
 
-            Album defaultAlbum = albumService.getDefaultAlbumForUser(createdUser.getDeviceUID());
+            UserAlbum defaultUserAlbum = albumService.getUserAlbumWithDefaultAlbum(createdUser.getDeviceUID());
 
             // 기본 앨범을 AlbumResponseDto로 변환
-            AlbumSimpleResponseDto dto = new AlbumSimpleResponseDto(defaultAlbum);
+            AlbumSimpleResponseDto dto = new AlbumSimpleResponseDto(defaultUserAlbum);
 
             return SuccessResponse.of(SuccessCode.USER_CREATED, dto);
         } catch (Exception e) {

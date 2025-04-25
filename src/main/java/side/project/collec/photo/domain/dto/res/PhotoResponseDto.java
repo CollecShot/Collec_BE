@@ -11,13 +11,13 @@ import side.project.collec.photo.domain.Photo;
 @AllArgsConstructor
 @Builder
 public class PhotoResponseDto {
-    private Long id;
+    private Long photoId;
     private String photoFilepath;
 
 
     public static PhotoResponseDto fromEntity(Photo photo) {
         return PhotoResponseDto.builder()
-                .id(photo.getId())
+                .photoId(photo.getId())
                 .photoFilepath(photo.getPhotoFilepath())
                 .build();
     }

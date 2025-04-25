@@ -22,10 +22,6 @@ public class Album {
     private String albumName;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "device_uid", nullable = false)
-    private User user;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_album_id", nullable = false)
     private UserAlbum userAlbum;
 }
