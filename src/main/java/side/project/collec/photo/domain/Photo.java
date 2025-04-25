@@ -6,8 +6,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import side.project.collec.album.domain.Album;
-
+//import side.project.collec.category.domain.Category;
+import side.project.collec.photoTag.domain.PhotoTag;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "photo")
@@ -30,23 +33,26 @@ public class Photo {
     @Column(name = "photo_url", nullable = false)
     private String photoUrl;
 
-    @Column(length = 200)
-    private String tags;
+    @Column(name = "caption")
+    private String caption;
 
-    @Column(name = "category")
-    private String category;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "category_id", nullable = false)
+//    private Category category;
 
+    @OneToMany(mappedBy = "photo", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PhotoTag> photoTags = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "album_id", nullable = false)
     private Album album;
 
     @Builder
-    public Photo(String photoFilepath, LocalDateTime photoDatetime, String photoUrl, String category, Album album) {
+    public Photo(String photoFilepath, LocalDateTime photoDatetime, String photoUrl, String caption, Album album) {
         this.photoFilepath = photoFilepath;
         this.photoDatetime = photoDatetime;
         this.photoUrl = photoUrl;
-        this.category = category;
+        this.caption = caption;
         this.album = album;
     }
 }
