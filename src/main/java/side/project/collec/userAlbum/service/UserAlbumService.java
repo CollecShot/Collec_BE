@@ -1,4 +1,4 @@
-package side.project.collec.userAlbum;
+package side.project.collec.userAlbum.service;
 
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -10,6 +10,8 @@ import side.project.collec.album.domain.dto.res.AlbumResponseDto;
 import side.project.collec.global.exception.customException.AlbumNotFoundException;
 import side.project.collec.photo.domain.Photo;
 import side.project.collec.photo.repository.PhotoRepository;
+import side.project.collec.userAlbum.domain.UserAlbum;
+import side.project.collec.userAlbum.repository.UserAlbumRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;

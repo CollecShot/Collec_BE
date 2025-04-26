@@ -5,8 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import side.project.collec.userAlbum.UserAlbum;
-import side.project.collec.user.domain.User;
+import side.project.collec.userAlbum.domain.UserAlbum;
 
 @Entity
 @Getter

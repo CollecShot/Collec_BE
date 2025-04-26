@@ -1,7 +1,8 @@
-package side.project.collec.userAlbum;
+package side.project.collec.userAlbum.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import side.project.collec.user.domain.User;
+import side.project.collec.userAlbum.domain.UserAlbum;
 
 import java.util.Optional;
 
