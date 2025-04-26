@@ -1,4 +1,4 @@
-package side.project.collec.album;
+package side.project.collec.album.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

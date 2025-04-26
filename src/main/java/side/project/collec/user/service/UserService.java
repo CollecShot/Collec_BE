@@ -6,8 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 import side.project.collec.user.domain.User;
 import side.project.collec.user.domain.dto.UserRequestDto;
 import side.project.collec.user.repository.UserRepository;
-import side.project.collec.userAlbum.UserAlbum;
-import side.project.collec.userAlbum.UserAlbumRepository;
+import side.project.collec.userAlbum.domain.UserAlbum;
+import side.project.collec.userAlbum.repository.UserAlbumRepository;
 
 @Service
 @RequiredArgsConstructor

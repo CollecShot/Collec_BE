@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import side.project.collec.album.domain.Album;
-import side.project.collec.album.AlbumRepository;
+import side.project.collec.album.repository.AlbumRepository;
 //import side.project.collec.category.domain.Category;
 //import side.project.collec.category.repository.CategoryRepository;
 import side.project.collec.global.exception.GlobalException;
@@ -29,8 +29,8 @@ import side.project.collec.tag.domain.Tag;
 import side.project.collec.tag.repository.TagRepository;
 import side.project.collec.user.domain.User;
 import side.project.collec.user.repository.UserRepository;
-import side.project.collec.userAlbum.UserAlbum;
-import side.project.collec.userAlbum.UserAlbumRepository;
+import side.project.collec.userAlbum.domain.UserAlbum;
+import side.project.collec.userAlbum.repository.UserAlbumRepository;
 
 import java.io.IOException;
 import java.util.*;
@@ -72,7 +72,7 @@ public class PhotoService {
 
         String caption = "";
         if (captionList != null && !captionList.isEmpty()) {
-            // 가장 마지막 항목만 저장 (글 부분)
+                        // 가장 마지막 항목만 저장 (글 부분)
             caption = captionList.get(captionList.size() - 1);
         }
 
@@ -97,7 +97,7 @@ public class PhotoService {
                 .photoFilepath(requestDto.getPhotoFilepath())
                 .photoDatetime(requestDto.getPhotoDatetime())
                 .photoUrl(photoUrl)
-                 .caption(caption)
+                .caption(caption)
                 .album(album)
                 .build();
 

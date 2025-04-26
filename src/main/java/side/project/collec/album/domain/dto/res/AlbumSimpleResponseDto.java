@@ -4,8 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import side.project.collec.album.domain.Album;
-import side.project.collec.userAlbum.UserAlbum;
+import side.project.collec.userAlbum.domain.UserAlbum;
 
 @Data
 @NoArgsConstructor
