@@ -20,6 +20,7 @@ import side.project.collec.global.exception.customException.AlbumNotFoundExcepti
 import side.project.collec.global.exception.customException.PhotoNotFoundException;
 import side.project.collec.global.exception.customException.UserNotFoundException;
 import side.project.collec.photo.domain.Photo;
+import side.project.collec.photo.domain.dto.req.PhotoClassifyRequestDto;
 import side.project.collec.photo.domain.dto.req.PhotoRequestDto;
 import side.project.collec.photo.domain.dto.res.PhotoResponseDto;
 import side.project.collec.photo.repository.PhotoRepository;
@@ -59,23 +60,6 @@ public class PhotoService {
     public void uploadPhotoExtractInfo(PhotoRequestDto requestDto, MultipartFile image) throws IOException {
         String photoUrl = uploadPhoto(image);
 
-        // AI 응답으로부터 category, tags, caption 추출
-        Map<String, Object> aiResponse = getInfoFromAI(photoUrl);
-        String albumName = (String) aiResponse.get("category"); // == albumName
-        @SuppressWarnings("unchecked")
-        List<String> tagNames = (List<String>) aiResponse.get("tags");
-//      String caption = (String) aiResponse.get("caption");
-
-        // AI 응답값 수정 전까지 임시방편
-        @SuppressWarnings("unchecked")
-        List<String> captionList = (List<String>) aiResponse.get("caption");
-
-        String caption = "";
-        if (captionList != null && !captionList.isEmpty()) {
-                        // 가장 마지막 항목만 저장 (글 부분)
-            caption = captionList.get(captionList.size() - 1);
-        }
-
         // 사용자 조회
         User user = userRepository.findByDeviceUID(requestDto.getDeviceUID())
                 .orElseThrow(() -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND));
@@ -86,24 +70,40 @@ public class PhotoService {
                         .user(user)
                         .build()));
 
-        // 사용자의 같은 이름의 앨범이 있는지 확인, 없으면 생성
-        Album album = albumRepository.findByAlbumNameAndUserAlbum_User_DeviceUID(albumName, requestDto.getDeviceUID())
-                .orElseGet(() -> albumRepository.save(Album.builder()
-                        .albumName(albumName)
-                        .userAlbum(userAlbum)
-                        .build()));
+        // albumId로 Album 조회
+        Album album = albumRepository.findById(userAlbum.getAlbums().get(0).getId())
+                .orElseThrow(() -> new AlbumNotFoundException(ErrorCode.ALBUM_NOT_FOUND));
 
+        // AI 응답으로부터 caption, tags 추출
+        Map<String, Object> aiResponse = getInfoFromAI(photoUrl);
+//        String caption = (String) aiResponse.get("caption");
+
+        @SuppressWarnings("unchecked")
+        List<String> captionList = (List<String>) aiResponse.get("caption");
+
+        String caption = "";
+        if (captionList != null && !captionList.isEmpty()) {
+            caption = captionList.get(captionList.size() - 1);
+        }
+
+        String category = (String) aiResponse.get("category");
+
+        // Photo 생성
         Photo photo = Photo.builder()
                 .photoFilepath(requestDto.getPhotoFilepath())
                 .photoDatetime(requestDto.getPhotoDatetime())
                 .photoUrl(photoUrl)
                 .caption(caption)
+                .category(category)
                 .album(album)
                 .build();
 
         photoRepository.save(photo);
 
         // Tag 처리 및 PhotoTag 저장
+        @SuppressWarnings("unchecked")
+        List<String> tagNames = (List<String>) aiResponse.get("tags");
+
         if (tagNames != null) {
             for (String tagName : tagNames) {
                 Tag tag = tagRepository.findByTagName(tagName)
@@ -115,6 +115,24 @@ public class PhotoService {
                 photoTagRepository.save(photoTag);
             }
         }
+    }
+
+    @Transactional
+    public void classifyPhoto(PhotoClassifyRequestDto requestDto) {
+        Photo photo = photoRepository.findById(requestDto.getPhotoId())
+                .orElseThrow(PhotoNotFoundException::new);
+
+        User user = userRepository.findByDeviceUID(requestDto.getDeviceUID())
+                .orElseThrow(() -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND));
+
+        UserAlbum userAlbum = userAlbumRepository.findByUser(user)
+                .orElseThrow(() -> new AlbumNotFoundException(ErrorCode.USER_ALBUM_NOT_FOUND));
+
+
+        Album album = albumRepository.findByAlbumNameAndUserAlbum(photo.getCategory(), userAlbum)
+                .orElseThrow(() -> new AlbumNotFoundException(ErrorCode.ALBUM_NOT_FOUND));
+
+        photo.changeAlbum(album); // changeAlbum 메서드를 사용하여 앨범 업데이트
     }
 
     private Map<String, Object> getInfoFromAI(String photoUrl) {
