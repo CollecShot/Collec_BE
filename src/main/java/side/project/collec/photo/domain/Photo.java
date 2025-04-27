@@ -36,6 +36,9 @@ public class Photo {
     @Column(name = "caption")
     private String caption;
 
+    @Column(name = "category")
+    private String category;
+
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "category_id", nullable = false)
 //    private Category category;
@@ -47,12 +50,17 @@ public class Photo {
     @JoinColumn(name = "album_id", nullable = false)
     private Album album;
 
+    public void changeAlbum(Album album) {
+        this.album = album;
+    }
+
     @Builder
-    public Photo(String photoFilepath, LocalDateTime photoDatetime, String photoUrl, String caption, Album album) {
+    public Photo(String photoFilepath, LocalDateTime photoDatetime, String photoUrl, String caption, String category, Album album) {
         this.photoFilepath = photoFilepath;
         this.photoDatetime = photoDatetime;
         this.photoUrl = photoUrl;
         this.caption = caption;
+        this.category = category;
         this.album = album;
     }
 }

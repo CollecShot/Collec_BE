@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import side.project.collec.global.exception.customException.AlbumNotFoundException;
 import side.project.collec.global.exception.customException.AlbumPhotoNotFoundException;
 import side.project.collec.global.exception.customException.PhotoNotFoundException;
+import side.project.collec.photo.domain.dto.req.PhotoClassifyRequestDto;
 import side.project.collec.photo.domain.dto.req.PhotoRequestDto;
 import side.project.collec.photo.domain.dto.res.PhotoResponseDto;
 import side.project.collec.photo.service.PhotoService;
@@ -37,6 +38,13 @@ public class PhotoController {
                                             @RequestPart(value = "image", required = false) MultipartFile image) throws IOException {
         photoService.uploadPhotoExtractInfo(requestDto, image);
         return new ResponseEntity<>(SuccessCode.CREATED.getMessage(), SuccessCode.CREATED.getStatus());
+    }
+
+    @PostMapping("/classify")
+    @Operation(summary = "AI 분석 후 사진 분류", description = "AI 분석 결과를 바탕으로 사진의 앨범을 재분류합니다.")
+    public ResponseEntity<String> classifyPhoto(@RequestBody PhotoClassifyRequestDto requestDto) {
+        photoService.classifyPhoto(requestDto);
+        return new ResponseEntity<>(SuccessCode.UPDATED.getMessage(), SuccessCode.UPDATED.getStatus());
     }
 
     //사진 상세 조회
@@ -73,7 +81,6 @@ public class PhotoController {
             @RequestParam("deviceUID") String deviceUID,
             @RequestParam("keyword") String keyword) {
         return ResponseEntity.ok(photoService.searchAllPhotos(deviceUID, keyword));
-
     }
 
     // 앨범 내 검색
