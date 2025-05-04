@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,7 +28,7 @@ import java.util.List;
 public class PhotoController {
     private final PhotoService photoService;
 
-    @PostMapping("/upload")
+    @PostMapping(path = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "스크린샷 업로드", description = "스크린샷 이미지를 AI 서버로 보내고 분석값을 DB에 저장합니다.")
     @ExceptionHandler(value = {AlbumNotFoundException.class})
     @ApiResponses(value = {
