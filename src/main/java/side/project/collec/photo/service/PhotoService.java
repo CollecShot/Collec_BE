@@ -57,7 +57,7 @@ public class PhotoService {
     private String aiServerUrl;
 
     @Transactional
-    public void uploadPhotoExtractInfo(PhotoRequestDto requestDto, MultipartFile image) throws IOException {
+    public Photo uploadPhotoExtractInfo(PhotoRequestDto requestDto, MultipartFile image) throws IOException {
         String photoUrl = uploadPhoto(image);
 
         // 사용자 조회
@@ -115,6 +115,7 @@ public class PhotoService {
                 photoTagRepository.save(photoTag);
             }
         }
+        return photo;
     }
 
     @Transactional
