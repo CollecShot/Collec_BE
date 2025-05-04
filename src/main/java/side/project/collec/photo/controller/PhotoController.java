@@ -4,14 +4,18 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import side.project.collec.global.exception.codes.ErrorCode;
 import side.project.collec.global.exception.customException.AlbumNotFoundException;
 import side.project.collec.global.exception.customException.AlbumPhotoNotFoundException;
 import side.project.collec.global.exception.customException.PhotoNotFoundException;
+import side.project.collec.global.exception.responses.ErrorResponse;
+import side.project.collec.global.exception.responses.SuccessResponse;
 import side.project.collec.photo.domain.dto.req.PhotoClassifyRequestDto;
 import side.project.collec.photo.domain.dto.req.PhotoRequestDto;
 import side.project.collec.photo.domain.dto.res.PhotoResponseDto;
@@ -28,17 +32,22 @@ import java.util.List;
 public class PhotoController {
     private final PhotoService photoService;
 
-    @PostMapping(path = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping("/upload")
     @Operation(summary = "스크린샷 업로드", description = "스크린샷 이미지를 AI 서버로 보내고 분석값을 DB에 저장합니다.")
-    @ExceptionHandler(value = {AlbumNotFoundException.class})
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "400", description = "Bad Request!"),
-            @ApiResponse(responseCode = "403", description = "Forbidden! Already Exist"),
-    })
-    public ResponseEntity<String> UploadPhoto(@RequestPart("metadata") PhotoRequestDto requestDto,
-                                            @RequestPart(value = "image", required = false) MultipartFile image) throws IOException {
-        photoService.uploadPhotoExtractInfo(requestDto, image);
-        return new ResponseEntity<>(SuccessCode.CREATED.getMessage(), SuccessCode.CREATED.getStatus());
+    public ResponseEntity<?> uploadPhoto(
+            @RequestPart("metadata") @Valid PhotoRequestDto requestDto,
+            @RequestPart(value = "image", required = false) MultipartFile image) {
+        try {
+            System.out.println("Received metadata: " + requestDto);
+
+            PhotoResponseDto responseDto = PhotoResponseDto.fromEntity(photoService.uploadPhotoExtractInfo(requestDto, image));
+            return SuccessResponse.of(SuccessCode.SCREENSHOT_PROCESSED, responseDto);
+
+        } catch (AlbumNotFoundException ex) {
+            return ErrorResponse.to(ErrorCode.ALBUM_NOT_FOUND);
+        } catch (Exception ex) {
+            return ErrorResponse.to(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PostMapping("/classify")
