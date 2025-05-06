@@ -49,5 +49,8 @@ public class AlbumService {
         // photoRepository.save(photo); (JPA 영속성 컨텍스트로 인해 save 생략 가능)
     }
 
+    public int countScreenshot(Long albumId) {
+        return photoRepository.countByAlbumId(albumId);
+    }
 
 }

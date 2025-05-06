@@ -34,8 +34,11 @@ public enum SuccessCode {
      * 200 OK (Additional Success Responses)
      */
     SCREENSHOT_PROCESSED(HttpStatus.OK, "스크린샷이 성공적으로 처리되었습니다."),
+
+    SCREENSHOT_COUNT_SUCCESS(HttpStatus.OK, "스크린샷 개수가 성공적으로 조회되었습니다."),
     NOTIFICATION_SENT(HttpStatus.OK, "알림이 성공적으로 전송되었습니다."),
     PHOTO_MOVED_TO_ALBUM(HttpStatus.OK, "사진이 앨범으로 성공적으로 이동되었습니다."),
+
 
     /**
      * 204 NO CONTENT (Deletion Responses)
