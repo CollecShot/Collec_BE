@@ -4,10 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import side.project.collec.album.domain.dto.req.MovePhotoRequestDto;
 import side.project.collec.album.service.AlbumService;
 import side.project.collec.global.exception.codes.ErrorCode;
@@ -39,6 +36,16 @@ public class AlbumController {
         }
     }
 
+    @GetMapping("/{albumId}/count")
+    @Operation(summary = "앨범의 스크린샷 개수", description = "특정 앨범의 스크린샷 개수를 반환합니다.")
+    public ResponseEntity<?> getScreenshotCount(@PathVariable("albumId") Long albumId) {
+        try {
+            int count = albumService.countScreenshot(albumId);
+            return SuccessResponse.of(SuccessCode.SCREENSHOT_COUNT_SUCCESS, count);
+        } catch (Exception e) {
+            return ErrorResponse.to(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 
 }

@@ -38,4 +38,6 @@ public interface PhotoRepository extends JpaRepository<Photo, Long> {
     List<Photo> searchPhotosInAlbum(@Param("albumId") Long albumId,
                                     @Param("keyword") String keyword);
 
+    int countByAlbumId(Long albumId);
+
 }
