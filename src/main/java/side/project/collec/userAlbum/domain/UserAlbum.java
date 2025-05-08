@@ -23,9 +23,8 @@ public class UserAlbum {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // user_id 대신 device_uid를 외래 키로 사용
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "device_uid", nullable = false)  // 외래 키를 device_uid로 수정
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "device_uid", nullable = false, unique = true)
     private User user;
 
     @OneToMany(mappedBy = "userAlbum", cascade = CascadeType.ALL, orphanRemoval = true)

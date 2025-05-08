@@ -39,9 +39,11 @@ public class UserAlbumService {
 
         return userAlbum.getAlbums().stream()
                 .map(album -> {
-                    // 각 앨범의 최신 사진 조회
+                    // 최신 사진
                     Photo latestPhoto = photoRepository.findLatestPhotoByAlbumId(album.getId()).orElse(null);
-                    return new AlbumResponseDto(album, latestPhoto);
+                    // 사진 개수
+                    int photoCount = photoRepository.countByAlbumId(album.getId());
+                    return new AlbumResponseDto(album, latestPhoto, photoCount);
                 })
                 .collect(Collectors.toList());
     }

@@ -15,10 +15,12 @@ public class AlbumResponseDto {
     private Long albumId;
     private String albumName;
     private String latestPhotoFilepath;
+    private int photoCount;
 
-    public AlbumResponseDto(Album album, Photo latestPhoto) {
+    public AlbumResponseDto(Album album, Photo latestPhoto, int photoCount) {
         this.albumId = album.getId();
         this.albumName = album.getAlbumName();
         this.latestPhotoFilepath = (latestPhoto != null) ? latestPhoto.getPhotoFilepath() : null;
+        this.photoCount = photoCount;
     }
 }
