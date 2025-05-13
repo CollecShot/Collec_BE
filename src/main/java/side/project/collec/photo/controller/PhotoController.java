@@ -19,7 +19,7 @@ import side.project.collec.photo.domain.dto.req.PhotoClassifyRequestDto;
 import side.project.collec.photo.domain.dto.req.PhotoRequestDto;
 import side.project.collec.photo.domain.dto.req.PhotoTrashRequestDto;
 import side.project.collec.photo.domain.dto.res.PhotoResponseDto;
-import side.project.collec.photo.domain.dto.res.PhotoRestoreRequestDto;
+import side.project.collec.photo.domain.dto.req.PhotoRestoreRequestDto;
 import side.project.collec.photo.service.PhotoService;
 import side.project.collec.global.exception.codes.SuccessCode;
 
@@ -135,6 +135,29 @@ public class PhotoController {
             return ErrorResponse.to(ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @DeleteMapping("/trashes/empty")
+    @Operation(summary = "휴지통 전체 비우기", description = "휴지통에 있는 모든 사진을 완전 삭제합니다.")
+    public ResponseEntity<?> emptyTrash(@RequestParam("deviceUID") String deviceUID) {
+        try {
+            photoService.emptyTrash(deviceUID);
+            return SuccessResponse.of(SuccessCode.PHOTO_TRASH_EMPTIED);
+        } catch (Exception e) {
+            return ErrorResponse.to(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @DeleteMapping("/trashes/selected")
+    @Operation(summary = "선택한 휴지통 사진 완전 삭제", description = "선택한 사진들만 휴지통에서 완전 삭제합니다.")
+    public ResponseEntity<?> deleteSelectedFromTrash(@RequestBody PhotoTrashRequestDto requestDto) {
+        try {
+            photoService.deleteSelectedFromTrash(requestDto.getPhotoIds());
+            return SuccessResponse.of(SuccessCode.PHOTO_SELECTED_TRASH_DELETED);
+        } catch (Exception e) {
+            return ErrorResponse.to(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
 
 

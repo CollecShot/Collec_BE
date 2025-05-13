@@ -41,7 +41,8 @@ public enum SuccessCode {
     PHOTO_MOVED_TO_TRASH(HttpStatus.OK, "사진이 휴지통으로 성공적으로 이동되었습니다."),
     PHOTO_RESTORED_FROM_TRASH(HttpStatus.OK, "휴지통에서 앨범으로 사진이 복구되었습니다."),
     PHOTO_TRASH_LIST_RETRIEVED(HttpStatus.OK, "휴지통에서 사진 앨범을 성공적으로 조회했습니다."),
-
+    PHOTO_TRASH_EMPTIED(HttpStatus.OK, "휴지통을 성공적으로 비웠습니다."),
+    PHOTO_SELECTED_TRASH_DELETED(HttpStatus.OK, "휴지통에 있는 선택된 사진을 성공적으로 삭제했습니다."),
 
     /**
      * 204 NO CONTENT (Deletion Responses)

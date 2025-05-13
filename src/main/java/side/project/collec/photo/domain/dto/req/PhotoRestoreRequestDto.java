@@ -1,4 +1,4 @@
-package side.project.collec.photo.domain.dto.res;
+package side.project.collec.photo.domain.dto.req;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
