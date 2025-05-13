@@ -23,6 +23,7 @@ import side.project.collec.global.exception.customException.UserNotFoundExceptio
 import side.project.collec.photo.domain.Photo;
 import side.project.collec.photo.domain.dto.req.PhotoClassifyRequestDto;
 import side.project.collec.photo.domain.dto.req.PhotoRequestDto;
+import side.project.collec.photo.domain.dto.req.PhotoTrashRequestDto;
 import side.project.collec.photo.domain.dto.res.PhotoResponseDto;
 import side.project.collec.photo.repository.PhotoRepository;
 import side.project.collec.photoTag.domain.PhotoTag;
@@ -209,21 +210,24 @@ public class PhotoService {
     }
 
     @Transactional
-    public void moveToTrash(Long photoId) {
-        Photo photo = photoRepository.findById(photoId)
-                .orElseThrow(PhotoNotFoundException::new);
-
-        photo.setDeleted(true);
-        photo.setDeletedAt(LocalDateTime.now());
+    public void moveToTrash(List<Long> photoIds) {
+        for (Long photoId : photoIds) {
+            Photo photo = photoRepository.findById(photoId)
+                    .orElseThrow(PhotoNotFoundException::new);
+            photo.setDeleted(true);
+            photo.setDeletedAt(LocalDateTime.now());
+        }
     }
 
-    @Transactional
-    public void restorePhoto(Long photoId) {
-        Photo photo = photoRepository.findById(photoId)
-                .orElseThrow(PhotoNotFoundException::new);
 
-        photo.setDeleted(false);
-        photo.setDeletedAt(null);
+    @Transactional
+    public void restorePhotos(List<Long> photoIds) {
+        for (Long photoId : photoIds) {
+            Photo photo = photoRepository.findById(photoId)
+                    .orElseThrow(PhotoNotFoundException::new);
+            photo.setDeleted(false);
+            photo.setDeletedAt(null);
+        }
     }
 
     @Transactional(readOnly = true)
