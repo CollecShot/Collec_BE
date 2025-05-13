@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import side.project.collec.photo.domain.Photo;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,6 +39,15 @@ public interface PhotoRepository extends JpaRepository<Photo, Long> {
     List<Photo> searchPhotosInAlbum(@Param("albumId") Long albumId,
                                     @Param("keyword") String keyword);
 
-    int countByAlbumId(Long albumId);
+    @Query(value = "SELECT COUNT(*) FROM photo WHERE album_id = :albumId AND is_deleted = false", nativeQuery = true)
+    int countByAlbumIdAndNotDeleted(@Param("albumId") Long albumId);
+
+
+    @Query("SELECT p FROM Photo p WHERE p.album.userAlbum.user.deviceUID = :deviceUID AND p.isDeleted = true")
+    List<Photo> findAllDeletedByDeviceUID(@Param("deviceUID") String deviceUID);
+
+    List<Photo> findAllByIsDeletedTrueAndDeletedAtBefore(LocalDateTime threshold);
+
+
 
 }

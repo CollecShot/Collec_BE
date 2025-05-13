@@ -38,6 +38,9 @@ public enum SuccessCode {
     SCREENSHOT_COUNT_SUCCESS(HttpStatus.OK, "스크린샷 개수가 성공적으로 조회되었습니다."),
     NOTIFICATION_SENT(HttpStatus.OK, "알림이 성공적으로 전송되었습니다."),
     PHOTO_MOVED_TO_ALBUM(HttpStatus.OK, "사진이 앨범으로 성공적으로 이동되었습니다."),
+    PHOTO_MOVED_TO_TRASH(HttpStatus.OK, "사진이 휴지통으로 성공적으로 이동되었습니다."),
+    PHOTO_RESTORED_FROM_TRASH(HttpStatus.OK, "휴지통에서 앨범으로 사진이 복구되었습니다."),
+    PHOTO_TRASH_LIST_RETRIEVED(HttpStatus.OK, "휴지통에서 사진 앨범을 성공적으로 조회했습니다."),
 
 
     /**

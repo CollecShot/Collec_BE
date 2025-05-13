@@ -6,6 +6,7 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -34,6 +35,7 @@ import side.project.collec.userAlbum.domain.UserAlbum;
 import side.project.collec.userAlbum.repository.UserAlbumRepository;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -205,5 +207,47 @@ public class PhotoService {
                         .build())
                 .collect(Collectors.toList());
     }
+
+    @Transactional
+    public void moveToTrash(Long photoId) {
+        Photo photo = photoRepository.findById(photoId)
+                .orElseThrow(PhotoNotFoundException::new);
+
+        photo.setDeleted(true);
+        photo.setDeletedAt(LocalDateTime.now());
+    }
+
+    @Transactional
+    public void restorePhoto(Long photoId) {
+        Photo photo = photoRepository.findById(photoId)
+                .orElseThrow(PhotoNotFoundException::new);
+
+        photo.setDeleted(false);
+        photo.setDeletedAt(null);
+    }
+
+    @Transactional(readOnly = true)
+    public List<PhotoResponseDto> getTrashedPhotos(String deviceUID) {
+        List<Photo> trashedPhotos = photoRepository
+                .findAllDeletedByDeviceUID(deviceUID);
+
+        return trashedPhotos.stream()
+                .map(PhotoResponseDto::fromEntity)
+                .collect(Collectors.toList());
+    }
+
+    @Scheduled(cron = "0 0 0 * * ?")
+    @Transactional
+    public void deleteExpiredTrashedPhotos() {
+        LocalDateTime threshold = LocalDateTime.now().minusDays(30);
+        List<Photo> expired = photoRepository.findAllByIsDeletedTrueAndDeletedAtBefore(threshold);
+        photoRepository.deleteAll(expired);
+    }
+
+
+
+
+
+
 
 }
