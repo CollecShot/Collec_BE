@@ -36,16 +36,6 @@ public class AlbumController {
         }
     }
 
-    @GetMapping("/{albumId}/count")
-    @Operation(summary = "앨범의 스크린샷 개수", description = "특정 앨범의 스크린샷 개수를 반환합니다.")
-    public ResponseEntity<?> getScreenshotCount(@PathVariable("albumId") Long albumId) {
-        try {
-            int count = albumService.countScreenshot(albumId);
-            return SuccessResponse.of(SuccessCode.SCREENSHOT_COUNT_SUCCESS, count);
-        } catch (Exception e) {
-            return ErrorResponse.to(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
-    }
 
 
 }

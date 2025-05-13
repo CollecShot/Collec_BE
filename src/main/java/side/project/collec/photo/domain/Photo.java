@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import side.project.collec.album.domain.Album;
-//import side.project.collec.category.domain.Category;
 import side.project.collec.photoTag.domain.PhotoTag;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -39,9 +38,11 @@ public class Photo {
     @Column(name = "category")
     private String category;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "category_id", nullable = false)
-//    private Category category;
+    @Column(name = "is_deleted")
+    private boolean isDeleted = false;
+
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
 
     @OneToMany(mappedBy = "photo", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PhotoTag> photoTags = new ArrayList<>();

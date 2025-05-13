@@ -6,7 +6,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,7 +17,9 @@ import side.project.collec.global.exception.responses.ErrorResponse;
 import side.project.collec.global.exception.responses.SuccessResponse;
 import side.project.collec.photo.domain.dto.req.PhotoClassifyRequestDto;
 import side.project.collec.photo.domain.dto.req.PhotoRequestDto;
+import side.project.collec.photo.domain.dto.req.PhotoTrashRequestDto;
 import side.project.collec.photo.domain.dto.res.PhotoResponseDto;
+import side.project.collec.photo.domain.dto.res.PhotoRestoreRequestDto;
 import side.project.collec.photo.service.PhotoService;
 import side.project.collec.global.exception.codes.SuccessCode;
 
@@ -101,4 +102,42 @@ public class PhotoController {
             @RequestParam("keyword") String keyword) {
         return ResponseEntity.ok(photoService.searchPhotosInAlbum(albumId, keyword));
     }
+
+    @PostMapping("/move/trash")
+    @Operation(summary = "사진 휴지통으로 이동", description = "사진들을 휴지통으로 이동시킵니다.")
+    public ResponseEntity<?> moveToTrash(@RequestBody PhotoTrashRequestDto requestDto) {
+        try {
+            photoService.moveToTrash(requestDto.getPhotoIds());
+            return SuccessResponse.of(SuccessCode.PHOTO_MOVED_TO_TRASH);
+        } catch (Exception e) {
+            return ErrorResponse.to(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/restore")
+    @Operation(summary = "휴지통에서 사진 복원", description = "휴지통에 있던 사진들을 복원합니다.")
+    public ResponseEntity<?> restorePhotos(@RequestBody PhotoRestoreRequestDto requestDto) {
+        try {
+            photoService.restorePhotos(requestDto.getPhotoIds());
+            return SuccessResponse.of(SuccessCode.PHOTO_RESTORED_FROM_TRASH);
+        } catch (Exception e) {
+            return ErrorResponse.to(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/trashes")
+    @Operation(summary = "휴지통 사진 목록 조회", description = "휴지통에 있는 사진들을 조회합니다.")
+    public ResponseEntity<?> getTrashedPhotos(@RequestParam("deviceUID") String deviceUID) {
+        try {
+            List<PhotoResponseDto> trashedPhotos = photoService.getTrashedPhotos(deviceUID);
+            return SuccessResponse.of(SuccessCode.PHOTO_TRASH_LIST_RETRIEVED, trashedPhotos);
+        } catch (Exception e) {
+            return ErrorResponse.to(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+
+
+
 }
