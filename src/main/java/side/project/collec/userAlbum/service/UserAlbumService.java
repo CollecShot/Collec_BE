@@ -42,7 +42,7 @@ public class UserAlbumService {
                     // 최신 사진
                     Photo latestPhoto = photoRepository.findLatestPhotoByAlbumId(album.getId()).orElse(null);
                     // 사진 개수
-                    int photoCount = photoRepository.countByAlbumId(album.getId());
+                    int photoCount = photoRepository.countByAlbumIdAndNotDeleted(album.getId());
                     return new AlbumResponseDto(album, latestPhoto, photoCount);
                 })
                 .collect(Collectors.toList());
