@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import side.project.collec.photo.domain.Photo;
+import side.project.collec.user.domain.User;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -47,7 +48,6 @@ public interface PhotoRepository extends JpaRepository<Photo, Long> {
     List<Photo> findAllDeletedByDeviceUID(@Param("deviceUID") String deviceUID);
 
     List<Photo> findAllByIsDeletedTrueAndDeletedAtBefore(LocalDateTime threshold);
-
 
 
 }

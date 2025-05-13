@@ -248,6 +248,20 @@ public class PhotoService {
         photoRepository.deleteAll(expired);
     }
 
+    public void emptyTrash(String deviceUID) {
+        userRepository.findByDeviceUID(deviceUID)
+                .orElseThrow(() -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND));
+        List<Photo> trashedPhotos = photoRepository.findAllDeletedByDeviceUID(deviceUID);
+        photoRepository.deleteAll(trashedPhotos);
+    }
+
+    public void deleteSelectedFromTrash(List<Long> photoIds) {
+        List<Photo> photosToDelete = photoRepository.findAllById(photoIds).stream()
+                .filter(Photo::isDeleted) // is_deleted = true 인 경우만
+                .collect(Collectors.toList());
+        photoRepository.deleteAll(photosToDelete);
+    }
+
 
 
 
