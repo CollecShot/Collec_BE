@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import side.project.collec.global.exception.codes.ErrorCode;
+import side.project.collec.global.exception.customException.AiModelException;
 import side.project.collec.global.exception.customException.AlbumNotFoundException;
 import side.project.collec.global.exception.customException.AlbumPhotoNotFoundException;
 import side.project.collec.global.exception.customException.PhotoNotFoundException;
@@ -46,6 +47,8 @@ public class PhotoController {
 
         } catch (AlbumNotFoundException ex) {
             return ErrorResponse.to(ErrorCode.ALBUM_NOT_FOUND);
+        } catch (AiModelException ex) {
+            return ErrorResponse.to(ErrorCode.AI_MODEL_ERROR);
         } catch (Exception ex) {
             return ErrorResponse.to(ErrorCode.INTERNAL_SERVER_ERROR);
         }

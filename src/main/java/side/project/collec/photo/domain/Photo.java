@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Builder
 @Entity
 @Table(name = "photo")
 @Data
@@ -32,17 +33,19 @@ public class Photo {
     @Column(name = "photo_url", nullable = false)
     private String photoUrl;
 
-    @Column(name = "caption")
+    @Column(name = "caption", length = 1000)
     private String caption;
 
     @Column(name = "category")
     private String category;
 
+    @Builder.Default
     @Column(name = "is_deleted")
     private boolean isDeleted = false;
 
+    @Builder.Default
     @Column(name = "deleted_at")
-    private LocalDateTime deletedAt;
+    private LocalDateTime deletedAt = null;
 
     @OneToMany(mappedBy = "photo", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PhotoTag> photoTags = new ArrayList<>();

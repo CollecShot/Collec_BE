@@ -21,7 +21,7 @@ public class User {
     @Column(name = "device_uid", nullable = false, unique = true)  // deviceUID를 PK로 설정
     private String deviceUID;  // deviceUID가 기본 키로 설정됩니다.
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<UserAlbum> userAlbums;
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private UserAlbum userAlbum;
 
 }

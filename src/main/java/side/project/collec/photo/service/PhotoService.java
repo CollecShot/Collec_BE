@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpStatusCodeException;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import side.project.collec.album.domain.Album;
@@ -17,6 +19,7 @@ import side.project.collec.album.repository.AlbumRepository;
 //import side.project.collec.category.repository.CategoryRepository;
 import side.project.collec.global.exception.GlobalException;
 import side.project.collec.global.exception.codes.ErrorCode;
+import side.project.collec.global.exception.customException.AiModelException;
 import side.project.collec.global.exception.customException.AlbumNotFoundException;
 import side.project.collec.global.exception.customException.PhotoNotFoundException;
 import side.project.collec.global.exception.customException.UserNotFoundException;
@@ -143,12 +146,20 @@ public class PhotoService {
         Map<String, String> requestBody = new HashMap<>();
         requestBody.put("url", photoUrl);
 
-        ResponseEntity<Map> response = restTemplate.postForEntity(aiServerUrl, requestBody, Map.class);
+        try {
+            ResponseEntity<Map> response = restTemplate.postForEntity(aiServerUrl, requestBody, Map.class);
 
-        if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
-            return response.getBody();
-        } else {
-            throw new GlobalException(ErrorCode.AI_MODEL_ERROR);
+            if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+                return response.getBody();
+            } else {
+                throw new AiModelException(ErrorCode.AI_MODEL_ERROR);
+            }
+        } catch (HttpStatusCodeException ex) {
+            // 4xx, 5xx 에러 모두 잡아서
+            throw new AiModelException(ErrorCode.AI_MODEL_ERROR);
+        } catch (RestClientException ex) {
+            // 네트워크 문제 등 다른 예외
+            throw new AiModelException(ErrorCode.AI_MODEL_ERROR);
         }
     }
 
