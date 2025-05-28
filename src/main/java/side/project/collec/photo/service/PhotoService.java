@@ -1,15 +1,17 @@
 package side.project.collec.photo.service;
 
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.HttpStatusCodeException;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,16 +19,15 @@ import side.project.collec.album.domain.Album;
 import side.project.collec.album.repository.AlbumRepository;
 //import side.project.collec.category.domain.Category;
 //import side.project.collec.category.repository.CategoryRepository;
-import side.project.collec.global.exception.GlobalException;
 import side.project.collec.global.exception.codes.ErrorCode;
 import side.project.collec.global.exception.customException.AiModelException;
 import side.project.collec.global.exception.customException.AlbumNotFoundException;
 import side.project.collec.global.exception.customException.PhotoNotFoundException;
 import side.project.collec.global.exception.customException.UserNotFoundException;
+import side.project.collec.global.util.MultipartInputStreamFileResource;
 import side.project.collec.photo.domain.Photo;
 import side.project.collec.photo.domain.dto.req.PhotoClassifyRequestDto;
 import side.project.collec.photo.domain.dto.req.PhotoRequestDto;
-import side.project.collec.photo.domain.dto.req.PhotoTrashRequestDto;
 import side.project.collec.photo.domain.dto.res.PhotoResponseDto;
 import side.project.collec.photo.repository.PhotoRepository;
 import side.project.collec.photoTag.domain.PhotoTag;
@@ -54,18 +55,12 @@ public class PhotoService {
     private final TagRepository tagRepository;
     private final PhotoTagRepository photoTagRepository;
     private final RestTemplate restTemplate;
-    private final AmazonS3 amazonS3;
-
-    @Value("${cloud.aws.s3.bucket}")
-    private String BUCKET_NAME;
 
     @Value("${ai.server.url}")
     private String aiServerUrl;
 
     @Transactional
     public Photo uploadPhotoExtractInfo(PhotoRequestDto requestDto, MultipartFile image) throws IOException {
-        String photoUrl = uploadPhoto(image);
-
         // 사용자 조회
         User user = userRepository.findByDeviceUID(requestDto.getDeviceUID())
                 .orElseThrow(() -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND));
@@ -81,9 +76,9 @@ public class PhotoService {
                 .orElseThrow(() -> new AlbumNotFoundException(ErrorCode.ALBUM_NOT_FOUND));
 
         // AI 응답으로부터 caption, tags 추출
-        Map<String, Object> aiResponse = getInfoFromAI(photoUrl);
-//        String caption = (String) aiResponse.get("caption");
+        Map<String, Object> aiResponse = getInfoFromAI(image);
 
+//        String caption = (String) aiResponse.get("caption");
         @SuppressWarnings("unchecked")
         List<String> captionList = (List<String>) aiResponse.get("caption");
 
@@ -98,7 +93,6 @@ public class PhotoService {
         Photo photo = Photo.builder()
                 .photoFilepath(requestDto.getPhotoFilepath())
                 .photoDatetime(requestDto.getPhotoDatetime())
-                .photoUrl(photoUrl)
                 .caption(caption)
                 .category(category)
                 .album(album)
@@ -142,42 +136,26 @@ public class PhotoService {
         photo.changeAlbum(album); // changeAlbum 메서드를 사용하여 앨범 업데이트
     }
 
-    private Map<String, Object> getInfoFromAI(String photoUrl) {
-        Map<String, String> requestBody = new HashMap<>();
-        requestBody.put("url", photoUrl);
-
+    private Map<String, Object> getInfoFromAI(MultipartFile image) {
         try {
-            ResponseEntity<Map> response = restTemplate.postForEntity(aiServerUrl, requestBody, Map.class);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+            MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+            body.add("image_data", new MultipartInputStreamFileResource(image.getInputStream(), "image.jpg", image.getSize()));
+
+            HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+
+            ResponseEntity<Map> response = restTemplate.postForEntity(aiServerUrl, requestEntity, Map.class);
 
             if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
                 return response.getBody();
             } else {
                 throw new AiModelException(ErrorCode.AI_MODEL_ERROR);
             }
-        } catch (HttpStatusCodeException ex) {
-            // 4xx, 5xx 에러 모두 잡아서
-            throw new AiModelException(ErrorCode.AI_MODEL_ERROR);
-        } catch (RestClientException ex) {
-            // 네트워크 문제 등 다른 예외
+        } catch (IOException | RestClientException ex) {
             throw new AiModelException(ErrorCode.AI_MODEL_ERROR);
         }
-    }
-
-    public String uploadPhoto(MultipartFile image) throws IOException {
-        String fileName = generateUniqueFileName(image.getOriginalFilename());
-
-        ObjectMetadata metadata = new ObjectMetadata();
-        metadata.setContentLength(image.getSize());
-        metadata.setContentType(image.getContentType());
-
-        amazonS3.putObject(new PutObjectRequest(BUCKET_NAME, fileName, image.getInputStream(), metadata));
-
-        return amazonS3.getUrl(BUCKET_NAME, fileName).toString();
-    }
-
-    private String generateUniqueFileName(String originalFilename) {
-        String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
-        return UUID.randomUUID().toString() + extension;
     }
 
     public PhotoResponseDto photoDetail(Long id) {
@@ -229,7 +207,6 @@ public class PhotoService {
             photo.setDeletedAt(LocalDateTime.now());
         }
     }
-
 
     @Transactional
     public void restorePhotos(List<Long> photoIds) {
