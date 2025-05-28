@@ -11,13 +11,14 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PhotoRepository extends JpaRepository<Photo, Long> {
-    // 특정 앨범 ID에 속한 모든 사진 조회
+    // 삭제되지 않은 특정 앨범의 모든 사진 목록 조회
     @Query(value = "SELECT * FROM photo WHERE album_id = :albumId AND is_deleted = false", nativeQuery = true)
     List<Photo> findByAlbumIdAndNotDeleted(@Param("albumId") Long albumId);
 
-    // 특정 앨범에서 가장 최신 사진 1개 조회
-    @Query("SELECT p FROM Photo p WHERE p.album.id = :albumId ORDER BY p.photoDatetime DESC LIMIT 1")
+    // 삭제되지 않은 특정 앨범의 최신 사진 1개 조회 (캡처 시간 기준 내림차순)
+    @Query("SELECT p FROM Photo p WHERE p.album.id = :albumId AND p.isDeleted = false ORDER BY p.photoDatetime DESC")
     Optional<Photo> findLatestPhotoByAlbumId(@Param("albumId") Long albumId);
+
 
     // 전체 키워드 검색
     @Query("SELECT DISTINCT p FROM Photo p " +
