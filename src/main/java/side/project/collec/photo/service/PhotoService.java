@@ -169,7 +169,7 @@ public class PhotoService {
     }
 
     public List<PhotoResponseDto> getPhotosByAlbumId(Long albumId) {
-        List<Photo> photos = photoRepository.findByAlbumId(albumId);
+        List<Photo> photos = photoRepository.findByAlbumIdAndNotDeleted(albumId);
         return photos.stream()
                 .map(photo -> PhotoResponseDto.builder()
                         .photoId(photo.getId())
