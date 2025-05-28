@@ -30,9 +30,6 @@ public class Photo {
     @Column(name = "photo_datetime", nullable = false)
     private LocalDateTime photoDatetime;
 
-    @Column(name = "photo_url", nullable = false)
-    private String photoUrl;
-
     @Column(name = "caption", length = 1000)
     private String caption;
 
@@ -59,10 +56,9 @@ public class Photo {
     }
 
     @Builder
-    public Photo(String photoFilepath, LocalDateTime photoDatetime, String photoUrl, String caption, String category, Album album) {
+    public Photo(String photoFilepath, LocalDateTime photoDatetime, String caption, String category, Album album) {
         this.photoFilepath = photoFilepath;
         this.photoDatetime = photoDatetime;
-        this.photoUrl = photoUrl;
         this.caption = caption;
         this.category = category;
         this.album = album;
