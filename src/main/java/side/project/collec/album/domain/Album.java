@@ -18,6 +18,7 @@ public class Album {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "album_name", nullable = false)
     private String albumName;
 
     @ManyToOne(fetch = FetchType.LAZY)
