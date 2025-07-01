@@ -30,7 +30,7 @@ public class Photo {
     @Column(name = "photo_datetime", nullable = false)
     private LocalDateTime photoDatetime;
 
-    @Column(name = "caption", length = 1000)
+    @Column(name = "caption", length = 3000)
     private String caption;
 
     @Column(name = "category")
