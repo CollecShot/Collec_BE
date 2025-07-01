@@ -1,14 +1,13 @@
 package side.project.collec.photo.repository;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import side.project.collec.photo.domain.Photo;
-import side.project.collec.user.domain.User;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 public interface PhotoRepository extends JpaRepository<Photo, Long> {
     // 삭제되지 않은 특정 앨범의 모든 사진 목록 조회
@@ -17,7 +16,7 @@ public interface PhotoRepository extends JpaRepository<Photo, Long> {
 
     // 삭제되지 않은 특정 앨범의 최신 사진 1개 조회 (캡처 시간 기준 내림차순)
     @Query("SELECT p FROM Photo p WHERE p.album.id = :albumId AND p.isDeleted = false ORDER BY p.photoDatetime DESC")
-    Optional<Photo> findLatestPhotoByAlbumId(@Param("albumId") Long albumId);
+    List<Photo> findLatestPhotoByAlbumId(@Param("albumId") Long albumId, Pageable pageable);
 
 
     // 전체 키워드 검색
