@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface PhotoRepository extends JpaRepository<Photo, Long> {
     // 삭제되지 않은 특정 앨범의 모든 사진 목록 조회
-    @Query(value = "SELECT * FROM photo WHERE album_id = :albumId AND is_deleted = false", nativeQuery = true)
+    @Query(value = "SELECT * FROM photo WHERE album_id = :albumId AND is_deleted = false ORDER BY photo_datetime DESC", nativeQuery = true)
     List<Photo> findByAlbumIdAndNotDeleted(@Param("albumId") Long albumId);
 
     // 삭제되지 않은 특정 앨범의 최신 사진 1개 조회 (캡처 시간 기준 내림차순)
