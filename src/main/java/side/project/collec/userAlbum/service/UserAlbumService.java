@@ -3,6 +3,7 @@ package side.project.collec.userAlbum.service;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -13,6 +14,7 @@ import side.project.collec.photo.repository.PhotoRepository;
 import side.project.collec.userAlbum.domain.UserAlbum;
 import side.project.collec.userAlbum.repository.UserAlbumRepository;
 
+import java.awt.print.Pageable;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,7 +42,8 @@ public class UserAlbumService {
         return userAlbum.getAlbums().stream()
                 .map(album -> {
                     // 최신 사진
-                    Photo latestPhoto = photoRepository.findLatestPhotoByAlbumId(album.getId()).orElse(null);
+                    List<Photo> photos = photoRepository.findLatestPhotoByAlbumId(album.getId(), PageRequest.of(0, 1));
+                    Photo latestPhoto = photos.isEmpty() ? null : photos.get(0);
                     // 사진 개수
                     int photoCount = photoRepository.countByAlbumIdAndNotDeleted(album.getId());
                     return new AlbumResponseDto(album, latestPhoto, photoCount);
