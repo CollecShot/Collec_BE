@@ -45,7 +45,7 @@ public interface PhotoRepository extends JpaRepository<Photo, Long> {
     int countByAlbumIdAndNotDeleted(@Param("albumId") Long albumId);
 
 
-    @Query("SELECT p FROM Photo p WHERE p.album.userAlbum.user.deviceUID = :deviceUID AND p.isDeleted = true")
+    @Query("SELECT p FROM Photo p WHERE p.album.userAlbum.user.deviceUID = :deviceUID AND p.isDeleted = true ORDER BY p.deletedAt DESC")
     List<Photo> findAllDeletedByDeviceUID(@Param("deviceUID") String deviceUID);
 
     List<Photo> findAllByIsDeletedTrueAndDeletedAtBefore(LocalDateTime threshold);
